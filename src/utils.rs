@@ -29,6 +29,22 @@ pub struct CombinationsState {
     done: bool,
 }
 
+pub fn combinations(t: usize, n: usize) -> CombinationsState {
+    let mut c = CombinationsState {
+        t,
+        c: vec![0; t + 2],
+        done: false,
+    };
+
+    // L1. Initialize
+    for i in 0..t {
+        c.c[i] = i;
+    }
+    c.c[t] = n;
+    c.c[t + 1] = 0;
+    c
+}
+
 impl Iterator for CombinationsState {
     type Item = Vec<usize>;
 
@@ -44,7 +60,7 @@ impl Iterator for CombinationsState {
         let mut j = 0;
         while (self.c[j] + 1) == self.c[j + 1] {
             self.c[j] = j;
-            j = j + 1;
+            j += 1;
         }
 
         // L4. Done?
@@ -53,25 +69,9 @@ impl Iterator for CombinationsState {
         };
 
         // L5. Increate c[j].
-        self.c[j] = self.c[j] + 1;
+        self.c[j] += 1;
 
         // return Some(visited) or None from L2 above
         ret
     }
-}
-
-pub fn combinations(t: usize, n: usize) -> CombinationsState {
-    let mut c = CombinationsState {
-        t: t,
-        c: vec![0; t + 2],
-        done: false,
-    };
-
-    // L1. Initialize
-    for i in 0..t {
-        c.c[i] = i;
-    }
-    c.c[t + 0] = n;
-    c.c[t + 1] = 0;
-    return c;
 }
