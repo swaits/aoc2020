@@ -4,24 +4,18 @@ use crate::utils;
 use anyhow::{anyhow, Result};
 
 fn day01_part1(data: &[i64]) -> Result<i64> {
-    for i in 0..data.len() - 2 {
-        for j in i + 1..data.len() - 1 {
-            if data[i] + data[j] == 2020 {
-                return Ok(data[i] * data[j]);
-            }
+    for c in utils::combinations(2, data.len()) {
+        if data[c[0]] + data[c[1]] == 2020 {
+            return Ok(data[c[0]] * data[c[1]]);
         }
     }
     Err(anyhow!("no result found"))
 }
 
 fn day01_part2(data: &[i64]) -> Result<i64> {
-    for i in 0..data.len() - 3 {
-        for j in i + 1..data.len() - 2 {
-            for k in j + 1..data.len() - 1 {
-                if data[i] + data[j] + data[k] == 2020 {
-                    return Ok(data[i] * data[j] * data[k]);
-                }
-            }
+    for c in utils::combinations(3, data.len()) {
+        if data[c[0]] + data[c[1]] + data[c[2]] == 2020 {
+            return Ok(data[c[0]] * data[c[1]] * data[c[2]]);
         }
     }
     Err(anyhow!("no result found"))
