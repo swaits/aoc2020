@@ -68,7 +68,7 @@ impl Iterator for CombinationsState {
             self.done = true;
         };
 
-        // L5. Increate c[j].
+        // L5. Increase c[j].
         self.c[j] += 1;
 
         // return Some(visited) or None from L2 above
