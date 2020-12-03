@@ -5,8 +5,9 @@ use anyhow::{anyhow, Result};
 
 fn part1(data: &[i64]) -> Result<i64> {
     for c in utils::combinations(2, data.len()) {
-        if data[c[0]] + data[c[1]] == 2020 {
-            return Ok(data[c[0]] * data[c[1]]);
+        let test = vec![data[c[0]], data[c[1]]];
+        if test.iter().sum::<i64>() == 2020 {
+            return Ok(test.iter().product());
         }
     }
     Err(anyhow!("no result found"))
@@ -14,8 +15,9 @@ fn part1(data: &[i64]) -> Result<i64> {
 
 fn part2(data: &[i64]) -> Result<i64> {
     for c in utils::combinations(3, data.len()) {
-        if data[c[0]] + data[c[1]] + data[c[2]] == 2020 {
-            return Ok(data[c[0]] * data[c[1]] * data[c[2]]);
+        let test = vec![data[c[0]], data[c[1]], data[c[2]]];
+        if test.iter().sum::<i64>() == 2020 {
+            return Ok(test.iter().product());
         }
     }
     Err(anyhow!("no result found"))
