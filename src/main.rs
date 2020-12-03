@@ -2,6 +2,7 @@ use anyhow::Result;
 
 mod day01;
 mod day02;
+mod day03;
 mod utils;
 
 // TODO
@@ -14,5 +15,6 @@ mod utils;
 fn main() -> Result<()> {
     println!("Day 01: {:?}", day01::run()?);
     println!("Day 02: {:?}", day02::run()?);
+    println!("Day 03: {:?}", day03::run()?);
     Ok(())
 }
