@@ -14,6 +14,15 @@ pub fn read_file(filename: &str) -> Result<String> {
     Ok(fs::read_to_string(filename)?)
 }
 
+pub fn parse_usize_in_range(s: &str, min: usize, max: usize) -> Option<usize> {
+    let x: usize = s.parse().expect("int parse error");
+    if min <= x && x <= max {
+        Some(x)
+    } else {
+        None
+    }
+}
+
 // Lexicographic combinations.
 //
 // This algorithm generates all t-combinations of n numbers {0, 1, ..., n-1},
