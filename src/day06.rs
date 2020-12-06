@@ -24,10 +24,7 @@ pub fn run() -> Result<(usize, usize)> {
     let data = utils::read_file("data/input-06.txt")?;
     let answers = utils::read_i64s("data/output-06.txt")?;
 
-    // parse into an array of Passport{}
     let p1 = data.split("\n\n").map(|s| count_uniq_alpha_chars(s)).sum();
-
-    // count passports with all req'd and validated fields
     let p2 = data.split("\n\n").map(|s| count_common_answers(s)).sum();
 
     assert_eq!(p1, answers[0] as usize);
