@@ -5,12 +5,16 @@ mod day02;
 mod day03;
 mod day04;
 mod day05;
+mod day06;
 mod utils;
 
 // TODO
 // ====
-// * move from i64 to something else that works with the data+problems, int, i32, usize?
 // * clean up error handling (move to `?` inside closures)
+// * templatize read_i64s()
+// * build out a bit of a harness for the runner
+// * add criterion benchmarking
+// * figure out nicer way to organize into modules
 
 // ==== main()
 
@@ -20,5 +24,6 @@ fn main() -> Result<()> {
     println!("Day 03: {:?}", day03::run()?);
     println!("Day 04: {:?}", day04::run()?);
     println!("Day 05: {:?}", day05::run()?);
+    println!("Day 06: {:?}", day06::run()?);
     Ok(())
 }
