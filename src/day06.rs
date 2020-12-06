@@ -3,14 +3,10 @@
 use crate::utils;
 use anyhow::Result;
 use std::collections::{HashMap, HashSet};
+use std::iter::FromIterator;
 
 fn count_uniq_alpha_chars(s: &str) -> usize {
-    let seen: HashSet<usize> = s
-        .chars()
-        .filter(|c| c.is_alphabetic())
-        .map(|c| c as usize)
-        .collect();
-    seen.len()
+    HashSet::<usize>::from_iter(s.chars().filter(|c| c.is_alphabetic()).map(|c| c as usize)).len()
 }
 
 fn count_common_answers(s: &str) -> usize {
