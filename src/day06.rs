@@ -2,8 +2,10 @@
 
 use crate::utils;
 use anyhow::Result;
-use std::collections::{HashMap, HashSet};
-use std::iter::FromIterator;
+use std::{
+    collections::{HashMap, HashSet},
+    iter::FromIterator,
+};
 
 fn count_uniq_alpha_chars(s: &str) -> usize {
     HashSet::<usize>::from_iter(s.chars().filter(|c| c.is_alphabetic()).map(|c| c as usize)).len()
