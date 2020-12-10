@@ -8,6 +8,7 @@ mod day05;
 mod day06;
 mod day07;
 mod day08;
+mod day09;
 mod utils;
 
 // TODO
@@ -29,5 +30,6 @@ fn main() -> Result<()> {
     println!("Day 06: {:?}", day06::run()?);
     println!("Day 07: {:?}", day07::run()?);
     println!("Day 08: {:?}", day08::run()?);
+    println!("Day 09: {:?}", day09::run()?);
     Ok(())
 }
