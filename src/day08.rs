@@ -4,7 +4,7 @@ use crate::utils;
 use anyhow::{anyhow, Result};
 use std::str::FromStr;
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 enum Instruction {
     Acc(i32),
     Jmp(i32),
@@ -115,6 +115,58 @@ impl Console {
         while self.step() == Status::Running {}
         self.accumulator
     }
+
+    fn repair(&mut self) -> Result<i32> {
+        // first run() so we can find every instruction executed
+        // since we know we only have to flip one instruction (jmp <=> nop), then
+        // we're guaranteed to already hit it on this first run
+        self.run();
+
+        // now that we've run once, find the candidate instructions
+        let candidate_indices: Vec<usize> = self
+            .hits
+            .iter()
+            .enumerate()
+            .filter(|(_, hits)| **hits > 0) // filter only instructions we hit
+            .map(|(i, _)| i) // map just the index
+            .filter(|i| match self.program[*i as usize] {
+                // filter instructions we can modify
+                Instruction::Jmp(_) => true,
+                Instruction::Nop(n) => {
+                    if n != 0 {
+                        true
+                    } else {
+                        false
+                    }
+                }
+                _ => false,
+            })
+            .collect();
+
+        // now test each of these candidates by exchanging jmp <=> nop
+        for i in candidate_indices {
+            // save original instruction
+            let original_instruction = self.program[i].clone();
+
+            // exchange jmp<=>nop
+            self.program[i] = match &self.program[i] {
+                Instruction::Jmp(n) => Instruction::Nop(*n),
+                Instruction::Nop(n) => Instruction::Jmp(*n),
+                _ => unreachable!("invalid candidate instruction"),
+            };
+
+            // run program
+            self.run();
+            if self.get_run_state() == Status::Completed {
+                return Ok(self.accumulator);
+            }
+
+            // that didn't work, restore the original instruction
+            self.program[i] = original_instruction;
+        }
+
+        Err(anyhow!("no result found"))
+    }
 }
 
 pub fn run() -> Result<(i32, i32)> {
@@ -122,10 +174,9 @@ pub fn run() -> Result<(i32, i32)> {
     let answers = utils::read_i64s("data/output-08.txt")?;
 
     let mut console = Console::from_str(&data)?;
-    println!("{:?}", console);
 
     let p1 = console.run();
-    let p2 = 0;
+    let p2 = console.repair()?;
 
     assert_eq!(p1, answers[0] as i32);
     assert_eq!(p2, answers[1] as i32);
