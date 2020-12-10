@@ -16,10 +16,10 @@ use std::collections::HashMap;
 
 struct PurseQuantity<'a>(usize, &'a str);
 
-// parse data into a HashMap<&str, Vec<&str>>
+// parse data into a HashMap<&str, Vec<PurseQuantity>>
 //
 // for example: "light red bags contain 1 bright white bag, 2 muted yellow bags."
-// becomes: { "light red": ["bright white", "muted yellow", "muted yellow"]}
+// becomes: { "light red": [(1, "bright white"), (2, "muted yellow")] }
 //
 fn parse(s: &str) -> HashMap<&str, Vec<PurseQuantity>> {
     s.lines()
