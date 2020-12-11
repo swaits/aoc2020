@@ -50,10 +50,9 @@ pub fn run() -> Result<(usize, usize)> {
     let answers = utils::read_i64s("data/output-10.txt")?;
 
     // add the adapters on either end of the sequence and sort
-    let max = data.iter().max().unwrap().clone();
     data.push(0); // add the (0) adapter at my seat
-    data.push(max + 3); // add the (max in the list + 3) adapter in my device
     data.sort_unstable(); // paths are always sorted
+    data.push(data.last().unwrap() + 3); // add the (max in the list + 3) adapter in my device
 
     // create a vec of the diffs from data[i] to data[i+1]
     let diffs: Vec<i64> = data

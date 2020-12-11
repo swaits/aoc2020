@@ -82,9 +82,9 @@ fn compute_advanced_adjacency(map: &Vec<Vec<Location>>) -> Vec<Vec<Vec<(usize, u
                             let dir = d.clone();
                             search_direction_for_chair(map, (i, j), &dir)
                         })
-                        .collect::<Vec<(usize, usize)>>()
+                        .collect()
                 })
-                .collect::<Vec<Vec<(usize, usize)>>>()
+                .collect()
         })
         .collect::<Vec<Vec<Vec<(usize, usize)>>>>()
 }
