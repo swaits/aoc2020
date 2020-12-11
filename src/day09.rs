@@ -5,10 +5,8 @@ use anyhow::{anyhow, Result};
 
 fn is_bad(data: &Vec<i64>, n: usize, i: usize) -> Result<i64> {
     let prev_n = &data[i - n..i];
-    let found =
-        utils::combinations(2, prev_n.len()).any(|c| data[i] == prev_n[c[0]] + prev_n[c[1]]);
-    if !found {
-        return Ok(data[i]);
+    if !utils::combinations(2, prev_n.len()).any(|c| data[i] == prev_n[c[0]] + prev_n[c[1]]) {
+        Ok(data[i])
     } else {
         Err(anyhow!("no result found"))
     }
