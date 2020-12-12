@@ -1,7 +1,7 @@
 // ==== utilities
 
 use anyhow::Result;
-use std::{fs, iter};
+use std::fs;
 
 pub fn read_i64s(filename: &str) -> Result<Vec<i64>> {
     Ok(read_file(filename)?
@@ -25,7 +25,7 @@ pub fn parse_usize_in_range(s: &str, min: usize, max: usize) -> Option<usize> {
 
 #[allow(dead_code)]
 pub fn times(n: usize) -> impl Iterator<Item = usize> {
-    iter::repeat(()).take(n).enumerate().map(|(i, _)| i)
+    (0..n).into_iter()
 }
 
 // Lexicographic combinations.
