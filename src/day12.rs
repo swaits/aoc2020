@@ -45,33 +45,18 @@ fn navigate2(data: &str) -> usize {
             "S" => wpt_n -= dist,
             "E" => wpt_e += dist,
             "W" => wpt_e -= dist,
-            "L" => match dist {
-                270 => {
-                    wpt_e = -wpt_e;
-                    mem::swap(&mut wpt_n, &mut wpt_e);
-                }
-                180 => {
-                    wpt_n = -wpt_n;
-                    wpt_e = -wpt_e;
-                }
-                90 => {
+            "L" | "R" => match (dir, dist) {
+                ("L", 90) | ("R", 270) => {
                     wpt_n = -wpt_n;
                     mem::swap(&mut wpt_n, &mut wpt_e);
                 }
-                _ => panic!("bad direction!"),
-            },
-            "R" => match dist {
-                90 => {
+                ("L", 270) | ("R", 90) => {
                     wpt_e = -wpt_e;
                     mem::swap(&mut wpt_n, &mut wpt_e);
                 }
-                180 => {
+                (_, 180) => {
                     wpt_n = -wpt_n;
                     wpt_e = -wpt_e;
-                }
-                270 => {
-                    wpt_n = -wpt_n;
-                    mem::swap(&mut wpt_n, &mut wpt_e);
                 }
                 _ => panic!("bad direction!"),
             },
