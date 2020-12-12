@@ -3,7 +3,7 @@
 use crate::utils;
 use anyhow::Result;
 
-pub fn count_diff1_diff3(diffs: &Vec<i64>) -> usize {
+pub fn count_diff1_diff3(diffs: &[i64]) -> usize {
     let diff_1 = diffs.iter().filter(|n| **n == 1).count();
     let diff_3 = diffs.iter().filter(|n| **n == 3).count();
     diff_1 * diff_3
@@ -21,7 +21,7 @@ fn paths_by_runlength(runlength: usize) -> usize {
     p[runlength % L]
 }
 
-fn count_paths(diffs: &Vec<i64>) -> usize {
+fn count_paths(diffs: &[i64]) -> usize {
     // count the runs of 1s
     let mut last_diff: i64 = 0;
     let mut runlength: usize = 1;
@@ -59,7 +59,7 @@ pub fn run() -> Result<(usize, usize)> {
         .iter()
         .enumerate()
         .take(data.len() - 1)
-        .map(|(i, _)| (&data[i] - &data[i + 1]).abs())
+        .map(|(i, _)| (data[i] - data[i + 1]).abs())
         .collect();
 
     let p1 = count_diff1_diff3(&diffs);

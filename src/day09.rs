@@ -3,7 +3,7 @@
 use crate::utils;
 use anyhow::{anyhow, Result};
 
-fn is_bad(data: &Vec<i64>, n: usize, i: usize) -> Result<i64> {
+fn is_bad(data: &[i64], n: usize, i: usize) -> Result<i64> {
     let prev_n = &data[i - n..i];
     if !utils::combinations(2, prev_n.len()).any(|c| data[i] == prev_n[c[0]] + prev_n[c[1]]) {
         Ok(data[i])
@@ -12,7 +12,7 @@ fn is_bad(data: &Vec<i64>, n: usize, i: usize) -> Result<i64> {
     }
 }
 
-fn find_first_bad(data: &Vec<i64>, n: usize, start: usize) -> Result<i64> {
+fn find_first_bad(data: &[i64], n: usize, start: usize) -> Result<i64> {
     for i in start..data.len() {
         let ret = is_bad(data, n, i);
         if ret.is_ok() {
@@ -22,7 +22,7 @@ fn find_first_bad(data: &Vec<i64>, n: usize, start: usize) -> Result<i64> {
     Err(anyhow!("no result found"))
 }
 
-fn find_contiguous_set(data: &Vec<i64>, x: i64) -> Result<i64> {
+fn find_contiguous_set(data: &[i64], x: i64) -> Result<i64> {
     for set_size in 2..data.len() - 1 {
         for i in 0..data.len() - set_size {
             if data[i..i + set_size].iter().sum::<i64>() == x {

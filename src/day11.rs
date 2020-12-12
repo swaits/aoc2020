@@ -12,7 +12,7 @@ enum Location {
 
 // compute the 8 immediately adjacent coordinates which contian chairs
 fn adjacent_coords(
-    map: &Vec<Vec<Location>>,
+    map: &[Vec<Location>],
     pos: (usize, usize),
     max: (usize, usize),
 ) -> Vec<(usize, usize)> {
@@ -34,7 +34,7 @@ fn adjacent_coords(
 }
 
 // precompute all the immediately adjacent chairs for all positions on a map
-fn compute_basic_adjacency(map: &Vec<Vec<Location>>) -> Vec<Vec<Vec<(usize, usize)>>> {
+fn compute_basic_adjacency(map: &[Vec<Location>]) -> Vec<Vec<Vec<(usize, usize)>>> {
     (0..map.len())
         .map(|row| {
             (0..map[row].len())
@@ -47,7 +47,7 @@ fn compute_basic_adjacency(map: &Vec<Vec<Location>>) -> Vec<Vec<Vec<(usize, usiz
 // search in one direction from a position until finding a chair (used to compute
 // advanced adjacency
 fn search_direction_for_chair(
-    map: &Vec<Vec<Location>>,
+    map: &[Vec<Location>],
     start: (usize, usize),
     step: &(i32, i32),
 ) -> Option<(usize, usize)> {
@@ -65,7 +65,7 @@ fn search_direction_for_chair(
 }
 
 // precompute all the directionally adjacent chairs for all positions on a map
-fn compute_advanced_adjacency(map: &Vec<Vec<Location>>) -> Vec<Vec<Vec<(usize, usize)>>> {
+fn compute_advanced_adjacency(map: &[Vec<Location>]) -> Vec<Vec<Vec<(usize, usize)>>> {
     // figure out our eight direction step values
     let dirs: Vec<(i32, i32)> = (-1..2)
         .flat_map(|i| (-1..2).map(move |j| (i, j)))
@@ -79,7 +79,7 @@ fn compute_advanced_adjacency(map: &Vec<Vec<Location>>) -> Vec<Vec<Vec<(usize, u
                 .map(|j| {
                     dirs.iter()
                         .filter_map(move |d| {
-                            let dir = d.clone();
+                            let dir = *d;
                             search_direction_for_chair(map, (i, j), &dir)
                         })
                         .collect()
@@ -92,7 +92,7 @@ fn compute_advanced_adjacency(map: &Vec<Vec<Location>>) -> Vec<Vec<Vec<(usize, u
 // run the seating algorithm, return the total number of changes
 fn seating_round(
     map: &mut Vec<Vec<Location>>,
-    adj: &Vec<Vec<Vec<(usize, usize)>>>,
+    adj: &[Vec<Vec<(usize, usize)>>],
     occupied_threshold: usize,
 ) -> usize {
     let mut changes: Vec<(usize, usize, Location)> = Vec::new();
@@ -123,21 +123,15 @@ fn seating_round(
         }
     }
 
-    changes.iter().for_each(|c| map[c.0][c.1] = c.2.clone());
+    changes.iter().for_each(|c| map[c.0][c.1] = c.2);
     changes.len()
 }
 
 // coutnt occupised seats on a given map
-fn count_occupied(map: &Vec<Vec<Location>>) -> usize {
-    let mut count = 0;
-    for i in 0..map.len() {
-        for j in 0..map[i].len() {
-            if map[i][j] == Location::Occupied {
-                count += 1
-            }
-        }
-    }
-    count
+fn count_occupied(map: &[Vec<Location>]) -> usize {
+    map.iter()
+        .flat_map(|row| row.iter().filter(|cell| **cell == Location::Occupied))
+        .count()
 }
 
 // main
@@ -167,7 +161,7 @@ pub fn run() -> Result<(usize, usize)> {
     drop(map1);
 
     // run seating alogirthm using advanced adjacency and occupied threshold of 5
-    let mut map2 = starting_map.clone();
+    let mut map2 = starting_map;
     let advanced_adjacency = compute_advanced_adjacency(&map2);
     while seating_round(&mut map2, &advanced_adjacency, 5) > 0 {}
     let p2 = count_occupied(&map2);

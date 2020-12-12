@@ -132,13 +132,7 @@ impl Console {
             .filter(|i| match self.program[*i as usize] {
                 // filter instructions we can modify
                 Instruction::Jmp(_) => true,
-                Instruction::Nop(n) => {
-                    if n != 0 {
-                        true
-                    } else {
-                        false
-                    }
-                }
+                Instruction::Nop(n) => n != 0,
                 _ => false,
             })
             .collect();
@@ -146,7 +140,7 @@ impl Console {
         // now test each of these candidates by exchanging jmp <=> nop
         for i in candidate_indices {
             // save original instruction
-            let original_instruction = self.program[i].clone();
+            let original_instruction = self.program[i];
 
             // exchange jmp<=>nop
             self.program[i] = match &self.program[i] {

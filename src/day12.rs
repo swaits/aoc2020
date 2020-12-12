@@ -16,8 +16,6 @@ fn navigate(data: &str) -> usize {
             "S" => pos_n -= dist,
             "E" => pos_e += dist,
             "W" => pos_e -= dist,
-            "L" => heading = (heading + 360 - dist) % 360,
-            "R" => heading = (heading + dist) % 360,
             "F" => match heading {
                 0 => pos_n += dist,
                 90 => pos_e += dist,
@@ -26,6 +24,8 @@ fn navigate(data: &str) -> usize {
                 360 => pos_n += dist,
                 _ => panic!("non cardinal heading!"),
             },
+            "L" => heading = (heading + 360 - dist) % 360,
+            "R" => heading = (heading + dist) % 360,
             _ => panic!("bad direction!"),
         }
     });
@@ -40,29 +40,26 @@ fn navigate2(data: &str) -> usize {
         let dir = &l[0..1];
         let dist = &l[1..].parse::<i64>().expect("int parse error");
 
-        match dir {
-            "N" => wpt_n += dist,
-            "S" => wpt_n -= dist,
-            "E" => wpt_e += dist,
-            "W" => wpt_e -= dist,
-            "L" | "R" => match (dir, dist) {
-                ("L", 90) | ("R", 270) => {
-                    wpt_n = -wpt_n;
-                    mem::swap(&mut wpt_n, &mut wpt_e);
-                }
-                ("L", 270) | ("R", 90) => {
-                    wpt_e = -wpt_e;
-                    mem::swap(&mut wpt_n, &mut wpt_e);
-                }
-                (_, 180) => {
-                    wpt_n = -wpt_n;
-                    wpt_e = -wpt_e;
-                }
-                _ => panic!("bad direction!"),
-            },
-            "F" => {
+        match (dir, dist) {
+            ("N", _) => wpt_n += dist,
+            ("S", _) => wpt_n -= dist,
+            ("E", _) => wpt_e += dist,
+            ("W", _) => wpt_e -= dist,
+            ("F", _) => {
                 ship_n += dist * wpt_n;
                 ship_e += dist * wpt_e;
+            }
+            ("L", 90) | ("R", 270) => {
+                wpt_n = -wpt_n;
+                mem::swap(&mut wpt_n, &mut wpt_e);
+            }
+            ("L", 270) | ("R", 90) => {
+                wpt_e = -wpt_e;
+                mem::swap(&mut wpt_n, &mut wpt_e);
+            }
+            ("L", 180) | ("R", 180) => {
+                wpt_n = -wpt_n;
+                wpt_e = -wpt_e;
             }
             _ => panic!("bad direction!"),
         }
