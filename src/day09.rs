@@ -5,10 +5,10 @@ use anyhow::{anyhow, Result};
 
 fn is_bad(data: &[i64], n: usize, i: usize) -> Result<i64> {
     let prev_n = &data[i - n..i];
-    if !utils::combinations(2, prev_n.len()).any(|c| data[i] == prev_n[c[0]] + prev_n[c[1]]) {
-        Ok(data[i])
-    } else {
+    if utils::combinations(2, prev_n.len()).any(|c| data[i] == prev_n[c[0]] + prev_n[c[1]]) {
         Err(anyhow!("no result found"))
+    } else {
+        Ok(data[i])
     }
 }
 
@@ -41,7 +41,7 @@ pub fn run() -> Result<(i64, i64)> {
     let answers = utils::read_i64s("data/output-09.txt")?;
 
     let p1 = find_first_bad(&data, 25, 25)?;
-    let p2 = find_contiguous_set(&data, 756008079)?;
+    let p2 = find_contiguous_set(&data, p1)?;
 
     assert_eq!(p1, answers[0]);
     assert_eq!(p2, answers[1]);
