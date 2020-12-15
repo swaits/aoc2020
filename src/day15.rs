@@ -2,10 +2,10 @@
 
 use crate::utils;
 use anyhow::Result;
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 
 fn play_speaking_game(input: &[i64], n: usize) -> i64 {
-    let mut seen: BTreeMap<i64, usize> = BTreeMap::new();
+    let mut seen: HashMap<i64, usize> = HashMap::new();
     let mut last_insert: Option<usize> = None;
 
     input.iter().enumerate().for_each(|(i, n)| {
