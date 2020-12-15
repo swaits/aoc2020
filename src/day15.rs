@@ -8,17 +8,17 @@ fn play_speaking_game(input: &[i64], n: usize) -> i64 {
     let mut seen: HashMap<i64, usize> = HashMap::new();
     let mut last_insert: Option<usize> = None;
 
-    input.iter().enumerate().for_each(|(i, n)| {
-        last_insert = seen.insert(*n, i);
+    input.iter().enumerate().for_each(|(turn, num)| {
+        last_insert = seen.insert(*num, turn);
     });
 
-    (seen.len()..n).fold(*input.last().unwrap(), |_, step| {
-        let num: i64 = match last_insert {
-            Some(prev_step) => (step - 1 - prev_step) as i64,
-            None => 0_i64,
-        };
+    (seen.len()..n).fold(*input.last().unwrap(), |_, turn| {
+        let num = match last_insert {
+            Some(prev_turn) => (turn - 1 - prev_turn),
+            None => 0,
+        } as i64;
 
-        last_insert = seen.insert(num, step);
+        last_insert = seen.insert(num, turn);
         num
     })
 }
