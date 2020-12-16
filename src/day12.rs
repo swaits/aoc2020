@@ -17,11 +17,10 @@ fn navigate(data: &str) -> usize {
             "E" => pos_e += dist,
             "W" => pos_e -= dist,
             "F" => match heading {
-                0 => pos_n += dist,
+                0 | 360 => pos_n += dist,
                 90 => pos_e += dist,
                 180 => pos_n -= dist,
                 270 => pos_e -= dist,
-                360 => pos_n += dist,
                 _ => panic!("non cardinal heading!"),
             },
             "L" => heading = (heading + 360 - dist) % 360,

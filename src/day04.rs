@@ -45,29 +45,23 @@ impl Passport {
 
     // byr (Birth Year) - four digits; at least 1920 and at most 2002.
     fn is_byr_valid(&self) -> bool {
-        if let Some(s) = &self.byr {
+        self.byr.as_ref().map_or(false, |s| {
             utils::parse_usize_in_range(&s, 1920, 2002).is_some()
-        } else {
-            false
-        }
+        })
     }
 
     // iyr (Issue Year) - four digits; at least 2010 and at most 2020.
     fn is_iyr_valid(&self) -> bool {
-        if let Some(s) = &self.iyr {
+        self.iyr.as_ref().map_or(false, |s| {
             utils::parse_usize_in_range(&s, 2010, 2020).is_some()
-        } else {
-            false
-        }
+        })
     }
 
     // eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
     fn is_eyr_valid(&self) -> bool {
-        if let Some(s) = &self.eyr {
+        self.eyr.as_ref().map_or(false, |s| {
             utils::parse_usize_in_range(&s, 2020, 2030).is_some()
-        } else {
-            false
-        }
+        })
     }
 
     // hgt (Height) - a number followed by either cm or in:
@@ -98,11 +92,7 @@ impl Passport {
                 Regex::new(r"^#[0-9a-f]{6}$").expect("regex compilation failure");
         }
 
-        if let Some(s) = &self.hcl {
-            HCL_RE.is_match(s)
-        } else {
-            false
-        }
+        self.hcl.as_ref().map_or(false, |s| HCL_RE.is_match(s))
     }
 
     // ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
@@ -112,11 +102,7 @@ impl Passport {
                 Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").expect("regex compilation failure");
         }
 
-        if let Some(s) = &self.ecl {
-            ECL_RE.is_match(s)
-        } else {
-            false
-        }
+        self.ecl.as_ref().map_or(false, |s| ECL_RE.is_match(s))
     }
 
     // pid (Passport ID) - a nine-digit number, including leading zeroes.
@@ -126,14 +112,11 @@ impl Passport {
                 Regex::new(r"^[0-9]{9}$").expect("regex compilation failure");
         }
 
-        if let Some(s) = &self.pid {
-            PID_RE.is_match(s)
-        } else {
-            false
-        }
+        self.pid.as_ref().map_or(false, |s| PID_RE.is_match(s))
     }
 
     // cid (Country ID) - ignored, missing or not.
+    #[allow(clippy::unused_self)]
     fn is_cid_valid(&self) -> bool {
         true
     }
@@ -149,7 +132,7 @@ impl FromStr for Passport {
                     .expect("regex compilation failure");
         }
 
-        let mut ret: Self = Default::default();
+        let mut ret: Self = Passport::default();
         s.split_whitespace().for_each(|s| {
             PASSPORT_RE.captures_iter(&s).for_each(|cap| match &cap[1] {
                 "byr" => ret.byr = Some(cap[2].to_string()),

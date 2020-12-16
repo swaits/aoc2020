@@ -8,7 +8,14 @@ use std::{
 };
 
 fn count_uniq_alpha_chars(s: &str) -> usize {
-    HashSet::<usize>::from_iter(s.chars().filter(|c| c.is_alphabetic()).map(|c| c as usize)).len()
+    HashSet::<usize>::from_iter(s.chars().filter_map(|c| {
+        if c.is_alphabetic() {
+            Some(c as usize)
+        } else {
+            None
+        }
+    }))
+    .len()
 }
 
 fn count_common_answers(s: &str) -> usize {

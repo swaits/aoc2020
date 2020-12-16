@@ -91,16 +91,16 @@ impl Console {
 
         // execute instruction at pc
         self.hits[self.pc] += 1;
-        match self.program[self.pc] {
+        match self.program.get(self.pc).unwrap() {
             Instruction::Acc(n) => {
                 self.accumulator += n;
                 self.pc += 1;
             }
             Instruction::Jmp(n) => {
-                if n < 0 {
+                if *n < 0 {
                     self.pc -= n.abs() as usize;
                 } else {
-                    self.pc += n as usize;
+                    self.pc += *n as usize;
                 }
             }
             Instruction::Nop(_) => {
@@ -127,13 +127,12 @@ impl Console {
             .hits
             .iter()
             .enumerate()
-            .filter(|(_, hits)| **hits > 0) // filter only instructions we hit
-            .map(|(i, _)| i) // map just the index
-            .filter(|i| match self.program[*i as usize] {
+            .filter_map(|(i, hits)| if *hits > 0 { Some(i) } else { None })
+            .filter(|i| match self.program.get(*i as usize).unwrap() {
                 // filter instructions we can modify
                 Instruction::Jmp(_) => true,
-                Instruction::Nop(n) => n != 0,
-                _ => false,
+                Instruction::Nop(n) => *n != 0,
+                Instruction::Acc(_) => false,
             })
             .collect();
 

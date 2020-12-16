@@ -42,7 +42,7 @@ fn parse_write(s: &str) -> Instruction {
 fn parse(input: &str) -> Vec<Instruction> {
     input
         .lines()
-        .map(|l| l.trim())
+        .map(str::trim)
         .map(|l| match &l[0..4] {
             "mask" => parse_mask(l),
             "mem[" => parse_write(l),
@@ -74,7 +74,6 @@ fn simulate1(program: &[Instruction]) -> u64 {
     memory.values().sum()
 }
 
-#[inline(always)]
 fn set_bit(n: u64, bit: usize, value: bool) -> u64 {
     if value {
         n | (1 << bit)

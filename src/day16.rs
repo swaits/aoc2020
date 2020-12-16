@@ -41,7 +41,7 @@ fn parse_fields(input: &str) -> Result<Vec<Field>> {
 }
 
 fn parse_tickets(input: &str) -> Result<(Vec<i64>, Vec<Vec<i64>>)> {
-    let mut lines = input.lines().map(|l| l.trim()).filter(|l| l.contains(','));
+    let mut lines = input.lines().map(str::trim).filter(|l| l.contains(','));
 
     let my_ticket: Vec<i64> = lines
         .next()
@@ -98,8 +98,8 @@ fn find_field_locations(fields: &[Field], my_ticket: &[i64], tickets: &[Vec<i64>
     let mut matches: HashMap<&str, usize> = HashMap::new();
     for _ in 0..my_ticket.len() {
         // find a matching field
-        for col_id in 0..viable_fields.len() {
-            let possible_fields = viable_fields[col_id]
+        for (col_id, fields_for_column) in viable_fields.iter().enumerate() {
+            let possible_fields = fields_for_column
                 .iter()
                 .filter(|(k, _)| !matches.contains_key(*k))
                 .filter(|(_, v)| **v == valid_tickets.len())

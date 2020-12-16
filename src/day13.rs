@@ -37,6 +37,7 @@ fn mins_to_next_departure(dep_time: usize, bus: &BusRoute) -> usize {
 // the Chinese Remainder Theorem.
 //
 // code from https://rosettacode.org/wiki/Chinese_remainder_theorem#Rust
+#[allow(clippy::many_single_char_names)]
 fn egcd(a: i64, b: i64) -> (i64, i64, i64) {
     if a == 0 {
         (b, 0, 1)

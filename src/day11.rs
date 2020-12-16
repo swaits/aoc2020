@@ -12,7 +12,7 @@ enum Location {
 
 // compute the 8 immediately adjacent coordinates which contian chairs
 fn adjacent_coords(
-    map: &[Vec<Location>],
+    seat_map: &[Vec<Location>],
     pos: (usize, usize),
     max: (usize, usize),
 ) -> Vec<(usize, usize)> {
@@ -27,9 +27,9 @@ fn adjacent_coords(
     let max_row = max.0.min(pos.0 + 1);
     let max_col = max.1.min(pos.1 + 1);
 
-    (min_row..max_row + 1)
-        .flat_map(|i| (min_col..max_col + 1).map(move |j| (i, j)))
-        .filter(|p| *p != pos && map[p.0][p.1] != Location::Floor)
+    (min_row..=max_row)
+        .flat_map(|i| (min_col..=max_col).map(move |j| (i, j)))
+        .filter(|p| *p != pos && seat_map[p.0][p.1] != Location::Floor)
         .collect()
 }
 
@@ -49,7 +49,7 @@ fn compute_basic_adjacency(map: &[Vec<Location>]) -> Vec<Vec<Vec<(usize, usize)>
 fn search_direction_for_chair(
     map: &[Vec<Location>],
     start: (usize, usize),
-    step: &(i32, i32),
+    step: (i32, i32),
 ) -> Option<(usize, usize)> {
     let mut i = start.0 as i32 + step.0;
     let mut j = start.1 as i32 + step.1;
@@ -80,7 +80,7 @@ fn compute_advanced_adjacency(map: &[Vec<Location>]) -> Vec<Vec<Vec<(usize, usiz
                     dirs.iter()
                         .filter_map(move |d| {
                             let dir = *d;
-                            search_direction_for_chair(map, (i, j), &dir)
+                            search_direction_for_chair(map, (i, j), dir)
                         })
                         .collect()
                 })
@@ -99,7 +99,7 @@ fn seating_round(
 
     for row in 0..map.len() {
         for col in 0..map[row].len() {
-            match map[row][col] {
+            match map[row].get(col).unwrap() {
                 Location::Floor => (),
                 Location::Unoccupied => {
                     if !adj[row][col]

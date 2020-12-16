@@ -13,12 +13,12 @@ pub fn count_diff1_diff3(diffs: &[i64]) -> usize {
 // follows the pattern 0, 1, 1, 2, 4, where the total paths for a runlength N
 // is sum of the paths in N-3, N-2, and N-1.
 fn paths_by_runlength(runlength: usize) -> usize {
-    let mut p: Vec<usize> = vec![0, 1, 1]; // vec of most recent 4 in sequence
-    const L: usize = 3; // length of p Vec
-    for i in L..runlength + 1 {
-        p[i % L] = p[(i - 3) % L] + p[(i - 2) % L] + p[(i - 1) % L];
+    let mut p: Vec<usize> = vec![0, 1, 1];
+    let p_len = p.len();
+    for i in p.len()..=runlength {
+        p[i % p_len] = p[(i - 3) % p_len] + p[(i - 2) % p_len] + p[(i - 1) % p_len];
     }
-    p[runlength % L]
+    p[runlength % p_len]
 }
 
 fn count_paths(diffs: &[i64]) -> usize {

@@ -33,7 +33,7 @@ pub fn run() -> Result<(i64, i64)> {
     let answers = utils::read_i64s("data/output-15.txt")?;
 
     let p1 = play_speaking_game(&data, 2020);
-    let p2 = play_speaking_game(&data, 30000000);
+    let p2 = play_speaking_game(&data, 30_000_000);
 
     assert_eq!(p1, answers[0]);
     assert_eq!(p2, answers[1]);
