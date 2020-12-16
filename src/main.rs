@@ -15,6 +15,7 @@ mod day12;
 mod day13;
 mod day14;
 mod day15;
+mod day16;
 mod utils;
 
 // TODO
@@ -43,5 +44,6 @@ fn main() -> Result<()> {
     println!("Day 13: {:?}", day13::run()?);
     println!("Day 14: {:?}", day14::run()?);
     println!("Day 15: {:?}", day15::run()?);
+    println!("Day 16: {:?}", day16::run()?);
     Ok(())
 }
