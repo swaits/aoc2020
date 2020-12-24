@@ -16,15 +16,8 @@ mod day13;
 mod day14;
 mod day15;
 mod day16;
+mod day18;
 mod utils;
-
-// TODO
-// ====
-// * clean up error handling (move to `?` inside closures)
-// * templatize read_i64s()
-// * build out a bit of a harness for the runner
-// * add criterion benchmarking
-// * figure out nicer way to organize into modules
 
 // ==== main()
 
