@@ -38,5 +38,6 @@ fn main() -> Result<()> {
     println!("Day 14: {:?}", day14::run()?);
     println!("Day 15: {:?}", day15::run()?);
     println!("Day 16: {:?}", day16::run()?);
+    println!("Day 18: {:?}", day18::run()?);
     Ok(())
 }
