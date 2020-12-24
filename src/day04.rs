@@ -2,7 +2,7 @@
 
 use crate::utils;
 use anyhow::Result;
-use lazy_static::lazy_static;
+use once_cell::sync::Lazy;
 use regex::Regex;
 use std::str::FromStr;
 
@@ -17,6 +17,19 @@ struct Passport {
     pid: Option<String>,
     cid: Option<String>,
 }
+
+static HGT_RE: Lazy<regex::Regex> =
+    Lazy::new(|| Regex::new(r"^[0-9]+(cm|in)$").expect("regex compilation failure"));
+static HCL_RE: Lazy<regex::Regex> =
+    Lazy::new(|| Regex::new(r"^#[0-9a-f]{6}$").expect("regex compilation failure"));
+static ECL_RE: Lazy<regex::Regex> = Lazy::new(|| {
+    Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").expect("regex compilation failure")
+});
+static PID_RE: Lazy<regex::Regex> =
+    Lazy::new(|| Regex::new(r"^[0-9]{9}$").expect("regex compilation failure"));
+static PASSPORT_RE: Lazy<regex::Regex> = Lazy::new(|| {
+    Regex::new(r"(byr|iyr|eyr|hgt|hcl|ecl|pid|cid):(\S*)").expect("regex compilation failure")
+});
 
 impl Passport {
     // true if all the required fields (valid or otherwise) are present (i.e. all but "cid")
@@ -68,11 +81,6 @@ impl Passport {
     //    If cm, the number must be at least 150 and at most 193.
     //    If in, the number must be at least 59 and at most 76.
     fn is_hgt_valid(&self) -> bool {
-        lazy_static! {
-            static ref HGT_RE: regex::Regex =
-                Regex::new(r"^[0-9]+(cm|in)$").expect("regex compilation failure");
-        }
-
         if let Some(s) = &self.hgt {
             if HGT_RE.is_match(s) {
                 if s.ends_with("cm") {
@@ -87,31 +95,16 @@ impl Passport {
 
     // hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
     fn is_hcl_valid(&self) -> bool {
-        lazy_static! {
-            static ref HCL_RE: regex::Regex =
-                Regex::new(r"^#[0-9a-f]{6}$").expect("regex compilation failure");
-        }
-
         self.hcl.as_ref().map_or(false, |s| HCL_RE.is_match(s))
     }
 
     // ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
     fn is_ecl_valid(&self) -> bool {
-        lazy_static! {
-            static ref ECL_RE: regex::Regex =
-                Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").expect("regex compilation failure");
-        }
-
         self.ecl.as_ref().map_or(false, |s| ECL_RE.is_match(s))
     }
 
     // pid (Passport ID) - a nine-digit number, including leading zeroes.
     fn is_pid_valid(&self) -> bool {
-        lazy_static! {
-            static ref PID_RE: regex::Regex =
-                Regex::new(r"^[0-9]{9}$").expect("regex compilation failure");
-        }
-
         self.pid.as_ref().map_or(false, |s| PID_RE.is_match(s))
     }
 
@@ -126,12 +119,6 @@ impl FromStr for Passport {
     type Err = anyhow::Error;
 
     fn from_str(s: &str) -> std::result::Result<Self, anyhow::Error> {
-        lazy_static! {
-            static ref PASSPORT_RE: regex::Regex =
-                Regex::new(r"(byr|iyr|eyr|hgt|hcl|ecl|pid|cid):(\S*)")
-                    .expect("regex compilation failure");
-        }
-
         let mut ret: Self = Passport::default();
         s.split_whitespace().for_each(|s| {
             PASSPORT_RE.captures_iter(&s).for_each(|cap| match &cap[1] {
